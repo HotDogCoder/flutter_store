@@ -7,5 +7,5 @@ abstract class CurrencyLocalDataSource {
   /// Throws [CacheException] if no cached data is present.
   Future<CurrencyModel> getLastCurrency();
 
-  Future<void> cacheCurrency(CurrencyModel currencyToCache);
+  Future<void>? cacheCurrency(CurrencyModel currencyToCache);
 }

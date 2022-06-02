@@ -1,3 +1,4 @@
+import 'package:store/core/error/exceptions.dart';
 import 'package:store/core/plataform/network_info.dart';
 import 'package:store/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
@@ -18,10 +19,22 @@ class CurrencyRepositoryImpl implements AbstractCurrencyRepository {
   });
 
   @override
-  Future<Either<Failure, Currency>> showCurrency(
-    String id,
-  ) async {
-    networkInfo.isConnected;
-    return Right(await remoteDataSource.showCurrency(id));
+  Future<Either<Failure, Currency>> showCurrency(String id) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteCurrency = await remoteDataSource.showCurrency(id);
+        localDataSource.cacheCurrency(remoteCurrency);
+        return Right(remoteCurrency);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      try {
+        final localCurrency = await localDataSource.getLastCurrency();
+        return Right(localCurrency);
+      } on CacheException {
+        return Left(CacheFailure());
+      }
+    }
   }
 }

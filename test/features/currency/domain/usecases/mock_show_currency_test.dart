@@ -25,6 +25,7 @@ void main() {
         .thenAnswer((_) async => Right(currency));
 
     final result = await usecase(Params(id: id));
+
     expect(result, Right(currency));
     verify(() => mockCurrencyRepository.showCurrency(id));
     verifyNoMoreInteractions(mockCurrencyRepository);

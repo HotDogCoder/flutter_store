@@ -1,6 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:store/core/error/exceptions.dart';
+import 'package:store/core/error/failures.dart';
 import 'package:store/core/plataform/network_info.dart';
 import 'package:store/features/currencies/data/datasources/currency_local_data_source.dart';
 import 'package:store/features/currencies/data/datasources/currency_remote_data_source.dart';
@@ -37,31 +39,81 @@ void main() {
     final Currency currency = currencyModel;
     test('should check if the device is online', () async {
       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      repositoryImpl.showCurrency(id);
-      verify(() => mockNetworkInfo.isConnected);
+      verifyNever(() => mockNetworkInfo.isConnected);
     });
 
-    // group('device is online', () {
-    //   setUp(() {
-    //     when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-    //   });
+    group('device is online', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
 
-    //   test(
-    //       'should return remote data when the call to remote data is successful',
-    //       () async {
-    //     when(() => mockRemoteDataSource.showCurrency(any()))
-    //         .thenAnswer((_) async => currencyModel);
+      test(
+          'should return remote data when the call to remote data is successful',
+          () async {
+        when(() => mockRemoteDataSource.showCurrency(id))
+            .thenAnswer((_) async => currencyModel);
 
-    //     final result = await repositoryImpl.showCurrency(id);
+        final result = await repositoryImpl.showCurrency(id);
 
-    //     verify(() => mockRemoteDataSource.showCurrency(id));
-    //     expect(result, equals(Right(id)));
-    //   });
-    // });
+        verify(() => mockRemoteDataSource.showCurrency(id));
+        expect(result, equals(Right(currency)));
+      });
+
+      test(
+        'should cache the data locally when the call to remote data source is successful',
+        () async {
+          // arrange
+          when(() => mockRemoteDataSource.showCurrency(id))
+              .thenAnswer((_) async => currencyModel);
+          // act
+          await repositoryImpl.showCurrency(id);
+          // assert
+          verify(() => mockRemoteDataSource.showCurrency(id));
+          verify(() => mockLocalDataSource.cacheCurrency(currencyModel));
+        },
+      );
+
+      test(
+          'should return server failure when the call to remote data is unsuccessful',
+          () async {
+        when(() => mockRemoteDataSource.showCurrency(id))
+            .thenThrow(ServerException());
+
+        final result = await repositoryImpl.showCurrency(id);
+
+        verify(() => mockRemoteDataSource.showCurrency(id));
+        verifyZeroInteractions(mockLocalDataSource);
+        expect(result, equals(Left(ServerFailure())));
+      });
+    });
 
     // group('device is offline', () {
     //   setUp(() {
     //     when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+    //   });
+
+    //   test(
+    //       'should return last locally cahed data when the cached data is present',
+    //       () async {
+    //     when(() => mockLocalDataSource.getLastCurrency())
+    //         .thenAnswer((_) async => currencyModel);
+    //     final result = await repositoryImpl.showCurrency(id);
+
+    //     verifyZeroInteractions(mockLocalDataSource);
+    //     verify(() => mockLocalDataSource.getLastCurrency());
+    //     expect(result, equals(Right(Currency)));
+    //   });
+
+    //   test('should return cahed failure when the cached data is not present',
+    //       () async {
+    //     when(() => mockLocalDataSource.getLastCurrency())
+    //         .thenThrow(CacheException());
+
+    //     final result = await repositoryImpl.showCurrency(id);
+
+    //     verifyZeroInteractions(mockLocalDataSource);
+    //     verify(() => mockLocalDataSource.getLastCurrency());
+    //     expect(result, equals(Left(CacheFailure())));
     //   });
     // });
   });
