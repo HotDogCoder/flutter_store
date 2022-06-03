@@ -1,4 +1,4 @@
-import 'package:store/core/plataform/network_info.dart';
+import 'package:store/core/network/network_info.dart';
 import 'package:store/features/categories/data/datasources/categorie_local_data_source.dart';
 import 'package:store/features/categories/data/datasources/categorie_remote_data_source.dart';
 import 'package:store/features/categories/domain/entities/categorie.dart';

@@ -1,5 +1,5 @@
 import 'package:store/core/error/exceptions.dart';
-import 'package:store/core/plataform/network_info.dart';
+import 'package:store/core/network/network_info.dart';
 import 'package:store/core/error/failures.dart';
 import 'package:dartz/dartz.dart';
 import 'package:store/features/currencies/data/datasources/currency_local_data_source.dart';

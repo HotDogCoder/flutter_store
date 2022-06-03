@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:store/core/error/exceptions.dart';
 import 'package:store/core/error/failures.dart';
-import 'package:store/core/plataform/network_info.dart';
+import 'package:store/core/network/network_info.dart';
 import 'package:store/features/currencies/data/datasources/currency_local_data_source.dart';
 import 'package:store/features/currencies/data/datasources/currency_remote_data_source.dart';
 import 'package:store/features/currencies/data/models/currency_model.dart';
@@ -33,6 +33,26 @@ void main() {
     );
   });
 
+  void runTestsOnline(Function body) {
+    group('device is online', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
+
+      body();
+    });
+  }
+
+  void runTestsOffline(Function body) {
+    group('device is online', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+
+      body();
+    });
+  }
+
   group('showCurrency', () {
     final String id = '1';
     final currencyModel = CurrencyModel(id: id, msg: 'getCurrency');
@@ -42,11 +62,7 @@ void main() {
       verifyNever(() => mockNetworkInfo.isConnected);
     });
 
-    group('device is online', () {
-      setUp(() {
-        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      });
-
+    runTestsOnline(() {
       test(
           'should return remote data when the call to remote data is successful',
           () async {
@@ -87,34 +103,30 @@ void main() {
       });
     });
 
-    // group('device is offline', () {
-    //   setUp(() {
-    //     when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-    //   });
+    runTestsOffline(() {
+      // test(
+      //     'should return last locally cahed data when the cached data is present',
+      //     () async {
+      //   when(() => mockLocalDataSource.getLastCurrency())
+      //       .thenAnswer((_) async => currencyModel);
+      //   final result = await repositoryImpl.showCurrency(id);
 
-    //   test(
-    //       'should return last locally cahed data when the cached data is present',
-    //       () async {
-    //     when(() => mockLocalDataSource.getLastCurrency())
-    //         .thenAnswer((_) async => currencyModel);
-    //     final result = await repositoryImpl.showCurrency(id);
+      //   verifyZeroInteractions(mockLocalDataSource);
+      //   verify(() => mockLocalDataSource.getLastCurrency());
+      //   expect(result, equals(Right(currency)));
+      // });
 
-    //     verifyZeroInteractions(mockLocalDataSource);
-    //     verify(() => mockLocalDataSource.getLastCurrency());
-    //     expect(result, equals(Right(Currency)));
-    //   });
+      // test('should return cahed failure when the cached data is not present',
+      //     () async {
+      //   when(() => mockLocalDataSource.getLastCurrency())
+      //       .thenThrow(CacheException());
 
-    //   test('should return cahed failure when the cached data is not present',
-    //       () async {
-    //     when(() => mockLocalDataSource.getLastCurrency())
-    //         .thenThrow(CacheException());
+      //   final result = await repositoryImpl.showCurrency(id);
 
-    //     final result = await repositoryImpl.showCurrency(id);
-
-    //     verifyZeroInteractions(mockLocalDataSource);
-    //     verify(() => mockLocalDataSource.getLastCurrency());
-    //     expect(result, equals(Left(CacheFailure())));
-    //   });
-    // });
+      //   verifyZeroInteractions(mockLocalDataSource);
+      //   verify(() => mockLocalDataSource.getLastCurrency());
+      //   expect(result, equals(Left(CacheFailure())));
+      // });
+    });
   });
 }

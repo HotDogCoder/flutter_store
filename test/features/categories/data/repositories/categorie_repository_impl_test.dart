@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:store/core/plataform/network_info.dart';
+import 'package:store/core/network/network_info.dart';
 import 'package:store/features/categories/data/datasources/categorie_local_data_source.dart';
 import 'package:store/features/categories/data/datasources/categorie_remote_data_source.dart';
 import 'package:store/features/categories/data/models/categorie_model.dart';
