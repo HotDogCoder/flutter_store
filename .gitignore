@@ -30,7 +30,8 @@
 .pub-cache/
 .pub/
 /build/
-
+.pubspec.lock
+windows/flutter/generated_plugins.cmake
 # Web related
 lib/generated_plugin_registrant.dart
 
