@@ -13,10 +13,8 @@ class CurrencyModel extends Currency {
     return CurrencyModel(id: jsonMap['id'], msg: jsonMap['msg']);
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'msg': msg,
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'msg': msg,
+      };
 }

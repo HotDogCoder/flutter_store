@@ -38,8 +38,7 @@ dependencies:
   #Functional programming thingies
   dartz: ^0.10.1
   #Remote api
-  # connectivity: ^0.4.3+7
-  data_connection_checker: ^0.3.4
+  connectivity: ^0.4.3+7
   http: ^0.13.4
   #Local cache
   shared_preferences: ^0.5.3+4
@@ -50,6 +49,8 @@ dependencies:
   firebase_analytics: ^9.1.2
   firebase_auth: ^3.3.9
   cloud_firestore: ^3.1.10
+  flutter_triple: ^1.2.7+2
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

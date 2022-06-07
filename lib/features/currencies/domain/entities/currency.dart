@@ -11,7 +11,4 @@ class Currency extends Equatable {
 
   @override
   List<Object?> get props => [id, msg];
-
-  @override
-  bool get stringify => true;
 }

@@ -5,6 +5,7 @@ import 'package:store/features/currencies/data/models/currency_model.dart';
 import 'package:store/features/currencies/domain/entities/currency.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
+import '../../../../mocks/currency_mock.dart';
 
 void main() {
   final currencyModel = CurrencyModel(id: '1', msg: 'getCurrency');
@@ -16,30 +17,19 @@ void main() {
     },
   );
 
-  group('fromJson', () {
-    test(
-      'should return a valid model when the JSON categorie is an integer',
-      () async {
-        final Map<String, dynamic> jsonMap =
-            json.decode(fixture('currency.json'));
+  test('should return a valid model', () async {
+    final Map<String, dynamic> jsonMap = json.decode(currencyMock);
 
-        final result = CurrencyModel.fromJson(jsonMap);
+    final result = CurrencyModel.fromJson(jsonMap);
 
-        expect(result, currencyModel);
-      },
-    );
+    expect(result, currencyModel);
   });
 
-  group('toJson', () {
-    test(
-      'should return a JSON map containing the proper data',
-      () async {
-        final result = currencyModel.toJson();
+  test('should return a JSON map containing the proper data', () async {
+    final result = currencyModel.toJson();
 
-        final expectedMap = {"id": "1", "msg": "getCurrency"};
+    final expectedMap = {"id": "1", "msg": "getCurrency"};
 
-        expect(result, expectedMap);
-      },
-    );
+    expect(result, expectedMap);
   });
 }

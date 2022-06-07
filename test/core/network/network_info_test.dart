@@ -1,20 +1,20 @@
-import 'package:dartz/dartz_streaming.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:mocktail/mocktail.dart';
-import 'package:data_connection_checker/data_connection_checker.dart';
+// import 'package:dartz/dartz_streaming.dart';
+// import 'package:flutter_test/flutter_test.dart';
+// import 'package:mocktail/mocktail.dart';
+// import 'package:data_connection_checker/data_connection_checker.dart';
 
-import 'package:store/core/network/network_info.dart';
+// import 'package:store/core/network/network_info.dart';
 
-class MockDataConnectionChecker extends Mock implements DataConnectionChecker {}
+// class MockDataConnectionChecker extends Mock implements DataConnectionChecker {}
 
-void main() {
-  NetworkInfoImpl networkInfoImpl;
-  MockDataConnectionChecker mockDataConnectionChecker;
+// void main() {
+//   NetworkInfoImpl networkInfoImpl;
+//   MockDataConnectionChecker mockDataConnectionChecker;
 
-  setUp(() {
-    mockDataConnectionChecker = MockDataConnectionChecker();
-    networkInfoImpl = NetworkInfoImpl(mockDataConnectionChecker);
-  });
+//   setUp(() {
+//     mockDataConnectionChecker = MockDataConnectionChecker();
+//     networkInfoImpl = NetworkInfoImpl(mockDataConnectionChecker);
+//   });
 
   // group('isConnected', () {
   //   test('should forward the call to DataConnectionChecker.hasConnection',
@@ -27,4 +27,4 @@ void main() {
   //     expect(result, true);
   //   });
   // });
-}
+// }
