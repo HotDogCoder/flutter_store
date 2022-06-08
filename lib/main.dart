@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:store/screens/home_screen.dart';
+import 'package:flutter_modular/flutter_modular.dart';
+import 'package:store/app_module.dart';
+import 'package:store/app_widget.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,10 +13,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Material App',
-      home: HomeScreen()
+    return ModularApp(
+      module: AppModule(),
+      child: AppWidget(),
     );
   }
 }
