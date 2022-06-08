@@ -12,41 +12,136 @@ import 'package:store/features/currencies/domain/entities/currency.dart';
 
 class MockRemoteDataSource extends Mock implements CurrencyRemoteDataSource {}
 
-// class MockLocalDataSource extends Mock implements CurrencyLocalDataSource {}
+class MockLocalDataSource extends Mock implements CurrencyLocalDataSource {}
 
-// class MockNetworkInfo extends Mock implements NetworkInfo {}
+class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
   late CurrencyRepositoryImpl repositoryImpl;
   late MockRemoteDataSource mockRemoteDataSource;
+  late MockLocalDataSource mockLocalDataSource;
+  late MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
-    repositoryImpl = CurrencyRepositoryImpl(mockRemoteDataSource);
+    mockLocalDataSource = MockLocalDataSource();
+    mockNetworkInfo = MockNetworkInfo();
+    repositoryImpl = CurrencyRepositoryImpl(
+      remoteDataSource: mockRemoteDataSource,
+      localDataSource: mockLocalDataSource,
+      networkInfo: mockNetworkInfo,
+    );
   });
 
-  const String id = "1";
-  final currencyModel = CurrencyModel(id: '1', msg: 'getCurrency');
+  group('showCurrency', () {
+    const String id = "1";
+    final currencyModel = CurrencyModel(id: '1', msg: 'getCurrency');
+    final Currency currency = currencyModel;
 
-  test('should return space media model when calls the datasource', () async {
-    when(() => mockRemoteDataSource.showCurrency(id))
-        .thenAnswer((_) async => currencyModel);
+    test('should check if the device is online', () async {
+      when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      repositoryImpl.showCurrency(id);
+      verify(() => mockNetworkInfo.isConnected);
+    });
 
-    final result = await repositoryImpl.showCurrency(id);
+    group('device is online', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => true);
+      });
 
-    expect(result, Right(currencyModel));
-    verify(() => mockRemoteDataSource.showCurrency(id));
+      test(
+          'should return remote data when the call to remote data is successful',
+          () async {
+        when(() => mockRemoteDataSource.showCurrency(id))
+            .thenAnswer((_) async => currencyModel);
+
+        final result = await repositoryImpl.showCurrency(id);
+
+        verify(() => mockRemoteDataSource.showCurrency(id));
+        expect(result, equals(Right(currency)));
+      });
+
+      test(
+        'should cache the data locally when the call to remote data source is successful',
+        () async {
+          // arrange
+          when(() => mockRemoteDataSource.showCurrency(id))
+              .thenAnswer((_) async => currencyModel);
+          // act
+          await repositoryImpl.showCurrency(id);
+          // assert
+          verify(() => mockRemoteDataSource.showCurrency(id));
+          verify(() => mockLocalDataSource.cacheCurrency(currencyModel));
+        },
+      );
+
+      test(
+          'should return server failure when the call to remote data is unsuccessful',
+          () async {
+        when(() => mockRemoteDataSource.showCurrency(id))
+            .thenThrow(ServerException());
+
+        final result = await repositoryImpl.showCurrency(id);
+
+        verify(() => mockRemoteDataSource.showCurrency(id));
+        verifyZeroInteractions(mockLocalDataSource);
+        expect(result, equals(Left(ServerFailure())));
+      });
+    });
+
+    group('device is offline', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+      });
+
+      test(
+          'should return last locally cached data when the cached data is present',
+          () async {
+        when(() => mockLocalDataSource.getLastCurrency())
+            .thenAnswer((_) async => currencyModel);
+        final result = await repositoryImpl.showCurrency(id);
+
+        verifyZeroInteractions(mockLocalDataSource);
+        verify(() => mockLocalDataSource.getLastCurrency());
+        expect(result, equals(Right(currency)));
+      });
+
+      // test('should return cahed failure when the cached data is not present',
+      //     () async {
+      //   when(() => mockLocalDataSource.getLastCurrency())
+      //       .thenThrow(CacheException());
+
+      //   final result = await repositoryImpl.showCurrency(id);
+
+      //   verifyZeroInteractions(mockLocalDataSource);
+      //   verify(() => mockLocalDataSource.getLastCurrency());
+      //   expect(result, equals(Left(CacheFailure())));
+      // });
+    });
   });
 
-  test(
-      'should return a server failure when calls the datasource is unsuccessful',
-      () async {
-    when(() => mockRemoteDataSource.showCurrency(id))
-        .thenThrow(ServerException());
+  // const String id = "1";
+  // final currencyModel = CurrencyModel(id: '1', msg: 'getCurrency');
 
-    final result = await repositoryImpl.showCurrency(id);
+  // test('should return space media model when calls the datasource', () async {
+  //   when(() => mockRemoteDataSource.showCurrency(id))
+  //       .thenAnswer((_) async => currencyModel);
 
-    expect(result, Left(ServerFailure()));
-    verify(() => mockRemoteDataSource.showCurrency(id));
-  });
+  //   final result = await repositoryImpl.showCurrency(id);
+
+  //   expect(result, Right(currencyModel));
+  //   verify(() => mockRemoteDataSource.showCurrency(id));
+  // });
+
+  // test(
+  //     'should return a server failure when calls the datasource is unsuccessful',
+  //     () async {
+  //   when(() => mockRemoteDataSource.showCurrency(id))
+  //       .thenThrow(ServerException());
+
+  //   final result = await repositoryImpl.showCurrency(id);
+
+  //   expect(result, Left(ServerFailure()));
+  //   verify(() => mockRemoteDataSource.showCurrency(id));
+  // });
 }

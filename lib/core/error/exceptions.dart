@@ -5,4 +5,7 @@ class ServerException extends Equatable implements Exception {
   List<Object?> get props => [];
 }
 
-// class CacheException implements Exception {}
+class CacheException extends Equatable implements Exception {
+  @override
+  List<Object?> get props => [];
+}

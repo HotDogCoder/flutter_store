@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:store/features/currencies/data/models/currency_model.dart';
 import 'package:store/features/currencies/domain/entities/currency.dart';
-
-import '../../../../fixtures/fixture_reader.dart';
 import '../../../../mocks/currency_mock.dart';
 
 void main() {
