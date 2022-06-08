@@ -5,7 +5,7 @@ abstract class CurrencyLocalDataSource {
   /// the user had an internet connection.
   ///
   /// Throws [CacheException] if no cached data is present.
-  Future<CurrencyModel> getLastCurrency();
+  Future<CurrencyModel>? getLastCurrency();
 
   Future<void>? cacheCurrency(CurrencyModel currencyToCache);
 }

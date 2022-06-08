@@ -31,7 +31,7 @@ class CurrencyRepositoryImpl implements AbstractCurrencyRepository {
     } else {
       try {
         final localCurrency = await localDataSource.getLastCurrency();
-        return Right(localCurrency);
+        return Right(localCurrency!);
       } on CacheException {
         return Left(CacheFailure());
       }
