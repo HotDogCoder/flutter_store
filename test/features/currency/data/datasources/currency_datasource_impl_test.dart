@@ -1,6 +1,6 @@
 import 'dart:ffi';
 import 'dart:io';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:store/core/error/exceptions.dart';
@@ -9,11 +9,11 @@ import 'package:store/features/currencies/data/models/currency_model.dart';
 
 import '../../../../mocks/currency_mock.dart';
 
-class HttpClientMock extends Mock implements HttpClient {}
+class HttpClientMock extends Mock implements http.Client {}
 
 void main() {
   late CurrencyRemoteDataSource dataSource;
-  late HttpClient client;
+  late http.Client client;
 
   setUp(() {
     // client = HttpClientMock();

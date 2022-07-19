@@ -89,35 +89,35 @@ void main() {
       });
     });
 
-    group('device is offline', () {
-      setUp(() {
-        when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-      });
+    //   group('device is offline', () {
+    //     setUp(() {
+    //       when(() => mockNetworkInfo.isConnected).thenAnswer((_) async => false);
+    //     });
 
-      test(
-          'should return last locally cached data when the cached data is present',
-          () async {
-        when(() => mockLocalDataSource.getLastCurrency())
-            .thenAnswer((_) async => currencyModel);
-        final result = await repositoryImpl.showCurrency(id);
+    //     test(
+    //         'should return last locally cached data when the cached data is present',
+    //         () async {
+    //       when(() => mockLocalDataSource.getLastCurrency())
+    //           .thenAnswer((_) async => currencyModel);
+    //       final result = await repositoryImpl.showCurrency(id);
 
-        verifyZeroInteractions(mockLocalDataSource);
-        verify(() => mockLocalDataSource.getLastCurrency());
-        expect(result, equals(Right(currency)));
-      });
+    //       verifyZeroInteractions(mockLocalDataSource);
+    //       verify(() => mockLocalDataSource.getLastCurrency());
+    //       expect(result, equals(Right(currency)));
+    //     });
 
-      // test('should return cahed failure when the cached data is not present',
-      //     () async {
-      //   when(() => mockLocalDataSource.getLastCurrency())
-      //       .thenThrow(CacheException());
+    //     // test('should return cahed failure when the cached data is not present',
+    //     //     () async {
+    //     //   when(() => mockLocalDataSource.getLastCurrency())
+    //     //       .thenThrow(CacheException());
 
-      //   final result = await repositoryImpl.showCurrency(id);
+    //     //   final result = await repositoryImpl.showCurrency(id);
 
-      //   verifyZeroInteractions(mockLocalDataSource);
-      //   verify(() => mockLocalDataSource.getLastCurrency());
-      //   expect(result, equals(Left(CacheFailure())));
-      // });
-    });
+    //     //   verifyZeroInteractions(mockLocalDataSource);
+    //     //   verify(() => mockLocalDataSource.getLastCurrency());
+    //     //   expect(result, equals(Left(CacheFailure())));
+    //     // });
+    //   });
   });
 
   // const String id = "1";
