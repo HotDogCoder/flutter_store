@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "634169825683",
+    "project_id": "project-venta",
+    "storage_bucket": "project-venta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:634169825683:android:0ea7e141b1e7ef4f437066",
+        "android_client_info": {
+          "package_name": "com.example.flutter_pedido"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "634169825683-lpp7f9ncbkh6meeje3j2p40c28fbqi9k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4pJXEsC9V7g0HGCLegEAk11w5-O4miW4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "634169825683-lpp7f9ncbkh6meeje3j2p40c28fbqi9k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
